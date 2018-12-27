@@ -1,1 +1,26 @@
+Sub HighlightMissings()
 
+    'Highlights the column A values which do not exist in column B with red color
+    Dim i As Long, lastA As Long, lastB As Long
+    Dim compare As Variant
+    Range("A:A").ClearFormats
+    lastA = Range("A65536").End(xlUp).Row
+    lastB = Range("B65536").End(xlUp).Row
+
+    For i = 2 To lastA
+    compare = Application.Match(Range("a" & i), Range("B2:B" & lastB), 0)
+        If IsError(compare) Then
+            Range("A" & i).Interior.ColorIndex = 3
+        End If
+    Next i
+
+'Removes duplicates in Column A
+Range("A:A").RemoveDuplicates Columns:=Array(1), Header:=xlYes
+
+'Filter by cell color in Column A
+Worksheets("Sheet1").Range("A1").AutoFilter _
+ field:=1, _
+ Criteria1:=RGB(255, 0, 0), Operator:=xlFilterCellColor, _
+ VisibleDropDown:=True
+
+End Sub
